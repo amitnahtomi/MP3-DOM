@@ -8,6 +8,7 @@ function playSong(songId) {
     let lastClicked = document.getElementsByClassName("b");
     if (lastClicked.length > 0) lastClicked[0].className = "a";
      document.getElementById(songId).className = "b";
+     
     // Your code here
 }
 
@@ -75,11 +76,11 @@ function handleAddSongEvent() {
  * Creates a song DOM element based on a song object.
  */
 function createSongElement({ id, title, album, artist, duration, coverArt }) {
-    const children = [`title: ${title}`, `album: ${album}`, `artist: ${artist}`, `duration: ${convertDur(duration)}`]
-    const classes = ["a"]
+    const children = [`title: ${title}`, `album: ${album}`, `artist: ${artist}`, `duration: ${convertDur(duration)}`];
+    const classes = ["a"];
     const attrs = {}
     const eventListeners = {}
-    let obj = createElement("div", children,classes, attrs, eventListeners);
+    let obj = createElement("div", children, classes, attrs, eventListeners);
     obj.id=id;
     let play = createElement("input", [], [], {value: "play", type: "button"}, {});
     let remove = createElement("input",[] ,[] ,{value: "remove", type: "button"}, {});
@@ -93,7 +94,7 @@ function createSongElement({ id, title, album, artist, duration, coverArt }) {
  */
 function createPlaylistElement({ id, name, songs }) {
     const children = [`id: ${id}`, `name: ${name}`, playlistDuration(id)]
-    const classes = ["c"]
+    const classes = ["playlist"]
     const attrs = {}
     const eventListeners = {}
     return createElement("div", children, classes, attrs, eventListeners)
@@ -130,6 +131,7 @@ function createElement(tagName, children = [], classes = [], attributes = {}, ev
  * Inserts all songs in the player as DOM elements into the songs list.
  */
 function generateSongs() {
+  player.songs.sort(compare);
     const songs = document.getElementById("songs")
 player.songs.forEach((song) => {
 const songsUl = createSongElement(song)
@@ -161,6 +163,15 @@ if (id === undefined){
     }
   }
   return id;
+}
+function compare(a, b){    //helping function
+  let x = a.title.toUpperCase();
+    let y = b.title.toUpperCase();
+    if (x<y)
+    return -1;
+    if(x>y)
+    return 1;
+    return 0;
 }
 function playlistDuration(id) {
     let counter = 0;
@@ -196,6 +207,12 @@ function convertDur (num){   //helping function
       }
       return mm + ":" + ss;
     }
+function convertToSec (dur){   //helping function
+  dur = dur.split(":");
+  dur[0] = Number(dur[0]);
+  dur[1]= Number(dur[1]);
+  return dur[0] * 60 + dur[1];
+}
 
 
 // Creating the page structure
